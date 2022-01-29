@@ -173,4 +173,55 @@ VALUES	('2022-01-28','2022-02-01',3,1),
 		('2022-01-25','2022-01-30',5,3),
 		('2022-01-28','2022-02-01',6,4)
 
-SELECT * FROM Cars
+--CREATE VIEW v_SelectAllInformationAboutCars
+--AS
+--SELECT C.ID, Number, CB.Name + ' ' + CM.Name 'Cars', C.Motor, C.Color, [Year], CT.Name, RegisterName, 
+--RC.StartDate 'Changed Start Date', RC.EndDate 'Changed End Date', R.StartDate 'In Date', R.EndDate 'Out Date',
+--Cus.Name + ' ' + Cus.Surname 'FullName', Cus.Gender, Cus.Adress, Cus.Mobile,
+--DLC.Name 'Driving category', DL.ValidThru 'Driving License Valid Thru'
+--FROM Cars C
+--LEFT JOIN CarModels CM ON CM.ID = C.ModelID
+--LEFT JOIN CarBrands CB ON CB.ID = CM.BrandID
+--LEFT JOIN CarTips CT ON CT.ID = CM.TipID
+--LEFT JOIN RentCars RC ON RC.CarID = C.ID
+--LEFT JOIN Rents R ON R.CarID = C.ID
+--LEFT JOIN Customers Cus ON Cus.ID = R.CustomerID
+--LEFT JOIN DrivingLicenses DL ON DL.ID = Cus.DrivingLicenseID
+--Left JOIN DrivingLicenseCategories DLC ON DLC.ID = Dl.DrivingLicenseCategoryID
+
+--CREATE PROCEDURE SelectAllCarsByYear @Motor nvarchar(4), @color nvarchar(50)
+--AS
+--Begin
+--SELECT * FROM Cars Where Motor > @Motor and Color  Like @color
+--ENd
+
+--CREATE Function Select_All_Cars()
+--returns table
+--AS
+--Return (SELECT * From Cars)
+
+--CREATE FUNCTION BigMotor(@Color nvarchar(50))
+--RETURNS int
+--AS
+--BEGIN
+--	return (SELECT MAX(Motor) from Cars where Color like @Color)
+--END
+
+--CREATE FUNCTION CountCars(@ModelID int)
+--Returns int
+--AS
+--Begin
+--declare @sumMotors int
+--	Select @sumMotors = Count(ModelID) from Cars where ModelID like @ModelID
+--	return @sumMotors
+--End
+
+SELECT * FROM v_SelectAllInformationAboutCars --custom view ile car info cagirmaq
+
+EXEC SelectAllCarsByYear 4000, 'black' --call my procedure
+
+SELECT * From dbo.Select_All_Cars() --cal my simple function
+
+SELECT dbo.BigMotor('Black') 'max motor' --Big motor with car color
+
+SELECT dbo.CountCars(1) 'Sum Motors' --ModelID ile Avtomobil sayi
