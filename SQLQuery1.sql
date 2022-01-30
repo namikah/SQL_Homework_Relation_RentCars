@@ -50,6 +50,9 @@ CREATE TABLE Cars(
 	ModelID int references CarModels(ID)
 )
 
+ALTER TABLE Cars
+ADD IsDelete int
+
 CREATE TABLE Customers(
 	ID int primary key identity,
 	Name nvarchar(50),
@@ -141,11 +144,11 @@ VALUES	('Under repair'),
 		('is empty')
 
 INSERT INTO Cars
-VALUES	('2014','White',4000,'90-DN-445', 'Best-Rent-Cars', 1),
-		('2022','Black', 6300, '90-OO-570', 'Best-Rent-Cars', 2),
-		('2008','Black', 3500, '90-SH-903', 'Best-Rent-Cars', 3),
-		('2014','WHite', 2400, '90-GF-111', 'Heydarov Namik', 4),
-		('2001','Gray', 1800, '90-TT-777', 'Best-Rent-Cars', 5)
+VALUES	('2014','White',4000,'90-DN-445', 'Best-Rent-Cars', 1,0),
+		('2022','Black', 6300, '90-OO-570', 'Best-Rent-Cars', 2,0),
+		('2008','Black', 3500, '90-SH-903', 'Best-Rent-Cars', 3,0),
+		('2014','WHite', 2400, '90-GF-111', 'Heydarov Namik', 4,0),
+		('2001','Gray', 1800, '90-TT-777', 'Best-Rent-Cars', 5,0)
 
 INSERT INTO Customers
 VALUES	('Namik','Heydarov',34, 'Male', 'Yasamal','0553237227',2),
@@ -216,6 +219,22 @@ VALUES	('2022-01-28','2022-02-01',3,1),
 --	return @sumMotors
 --End
 
+--CREATE TRIGGER dbo.myTriggers3 ON Cars
+--INSTEAD OF Delete
+--AS
+--BEGIN
+--	Update Cars SET IsDelete = 1 where ID =(select ID from deleted)
+--END
+
+--drop trigger dbo.myTriggers3
+
+--CREATE TRIGGER dbo.myTriggers ON Cars
+--INSTEAD OF Delete
+--AS
+--BEGIN
+--	Update Cars SET IsDelete = 1 where ID =(select ID from deleted)
+--END
+
 SELECT * FROM v_SelectAllInformationAboutCars --custom view ile car info cagirmaq
 
 EXEC SelectAllCarsByYear 4000, 'black' --call my procedure
@@ -225,3 +244,5 @@ SELECT * From dbo.Select_All_Cars() --cal my simple function
 SELECT dbo.BigMotor('Black') 'max motor' --Big motor with car color
 
 SELECT dbo.CountCars(1) 'Sum Motors' --ModelID ile Avtomobil sayi
+
+DELETE Cars Where ID = 1 --trigger on cars table instead of delete
